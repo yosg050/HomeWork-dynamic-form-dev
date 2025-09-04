@@ -15,7 +15,6 @@ export default function FormField({ fld, form }) {
     formState: { errors },
   } = form;
   const isSelect = fld.type === "select";
-  const isDateOrNumber = fld.type === "date" || fld.type === "number";
   const options = isSelect ? normalizeOptions(fld) : [];
 
   return (
@@ -26,6 +25,7 @@ export default function FormField({ fld, form }) {
         const err = errors[fld.name]?.message;
         return (
           <TextField
+            size="small"
             {...field}
             fullWidth
             label={fld.label}
@@ -34,12 +34,8 @@ export default function FormField({ fld, form }) {
             required={!!fld.required}
             error={!!err}
             helperText={err || " "}
-            slotProps={{
-              inputLabel: isDateOrNumber ? { shrink: true } : undefined,
-            }}
-            inputProps={{
-              ...(fld.type === "number" ? { step: "1" } : {}),
-            }}
+            slotProps={{ inputLabel: { shrink: true } }}
+            inputProps={{ ...(fld.type === "number" ? { step: "1" } : {}) }}
           >
             {isSelect &&
               options.map((opt) => (

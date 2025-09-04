@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { validatorForField } from "./fieldValidators";
+import { validatorForField } from "./fieldValidators.js";
 
 export function buildYupFromSchema(schemaDef) {
   const shape = Object.fromEntries(
