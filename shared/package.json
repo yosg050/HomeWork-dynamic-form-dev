@@ -1,0 +1,17 @@
+{
+    "name": "@dynamic-form/shared",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "index.js",
+    "exports": {
+        ".": "./index.js",
+        "./schemas": "./schemas/index.js",
+        "./validators": "./validators/index.js"
+    },
+    "dependencies": {
+        "yup": "^1.7.0"
+    },
+    "peerDependencies": {
+        "yup": ">=1.7.0"
+    }
+}

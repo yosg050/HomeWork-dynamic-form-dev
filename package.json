@@ -1,0 +1,23 @@
+{
+    "name": "dynamic-form-monorepo",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "workspaces": [
+        "front",
+        "back",
+        "shared"
+    ],
+    "scripts": {
+        "install:all": "npm install",
+        "dev:front": "npm run dev --workspace=front",
+        "dev:back": "npm run dev --workspace=back",
+        "build:front": "npm run build --workspace=front",
+        "build:back": "npm run build --workspace=back",
+        "lint": "npm run lint --workspaces",
+        "test": "npm run test --workspaces"
+    },
+    "devDependencies": {
+        "concurrently": "^7.6.0"
+    }
+}
