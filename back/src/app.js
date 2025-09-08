@@ -2,7 +2,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { getDefaultValues, buildYupFromSchema } from "../../shared/index.js";
+import {buildYupFromSchema } from "../../shared/index.js";
 import { getSchema, getSchemaETag } from "./schema.js";
 import { listSubmissions, saveSubmission } from "./services/submissionsService.js";
 import submissionsRoutes from "./routes/submissions.routes.js";

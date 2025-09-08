@@ -8,7 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
-import { getSubmissions } from "../lib/api";
+import { listSubmissions } from "../../api/submissions";
 
 function fmt(d) {
   try {
@@ -21,7 +21,7 @@ function fmt(d) {
 export default function SubmissionsList() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["submissions"],
-    queryFn: getSubmissions,
+    queryFn: listSubmissions,
     refetchOnWindowFocus: false,
   });
 

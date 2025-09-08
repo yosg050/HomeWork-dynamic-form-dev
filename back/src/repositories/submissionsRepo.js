@@ -25,10 +25,10 @@ export async function scanSubmissions({ limit = 100, cursor }) {
   };
   if (cursor) {
     params.ExclusiveStartKey = { submissionId: cursor };
-    console.log("Scanning from cursor:", cursor); //testing
+    // console.log("Scanning from cursor:", cursor); //testing
   }
   const out = await ddb.send(new ScanCommand(params));
-  console.log("ScanCommand output:", out); //testing
+  // console.log("ScanCommand output:", out); //testing
 
   return {
     items: out.Items || [],

@@ -1,13 +1,15 @@
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import DynamicForm from "../features/form/DynamicForm.jsx";
+import DynamicForm from "../components/form/DynamicForm.jsx";
 // import SubmissionsList from "../features/submissions/SubmissionsListTest.jsx";
 import Grid from "@mui/material/Grid";
 import { useCallback, useEffect, useState } from "react";
-import { fetchSchema, postSubmission } from "../lib/api.js";
+// import { fetchSchema, postSubmission } from "../api/submissions.js";
 import Toast from "../components/Toast.jsx";
-import SubmissionsList from "../components/SubmissionsList.jsx";
+import SubmissionsList from "../components/submissions/SubmissionsList.jsx";
+import { getSchema } from "../api/schema.js";
+import { postSubmission } from "../api/submissions.js";
 
 export default function DynamicFormPage() {
   const [schema, setSchema] = useState(null);
@@ -20,8 +22,8 @@ export default function DynamicFormPage() {
   });
 
   useEffect(() => {
-    fetchSchema()
-      .then(setSchema)
+    getSchema()
+      .then((res) => setSchema(res?.schema ?? res))
       .catch((e) => setErr(e.message || "Failed to load schema"))
       .finally(() => setLoading(false));
   }, []);
