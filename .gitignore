@@ -46,3 +46,8 @@ Thumbs.db
 **/.env
 .env.*
 *.env
+.env
+*.env
+.env.*
+back/.env
+front/.env

@@ -32,6 +32,6 @@ export async function scanSubmissions({ limit = 100, cursor }) {
 
   return {
     items: out.Items || [],
-    cursor: out.LastEvaluatedKey?.submissionId || [],
+    nextCursor: out.LastEvaluatedKey?.submissionId || undefined,
   };
 }
