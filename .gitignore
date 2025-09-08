@@ -51,3 +51,10 @@ Thumbs.db
 .env.*
 back/.env
 front/.env
+
+package-lock.json
+*package-lock.json
+.package-lock.json
+**/package-lock.json
+back/package-lock.json
+front/package-lock.json
