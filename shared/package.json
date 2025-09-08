@@ -9,7 +9,11 @@
         "./validators": "./validators/index.js"
     },
     "dependencies": {
-        "yup": "^1.7.0"
+        "@aws-sdk/client-dynamodb": "^3.883.0",
+        "@aws-sdk/lib-dynamodb": "^3.883.0",
+        "bcryptjs": "^3.0.2",
+        "uuid": "^12.0.0",
+        "yup": ">=1.7.0"
     },
     "peerDependencies": {
         "yup": ">=1.7.0"

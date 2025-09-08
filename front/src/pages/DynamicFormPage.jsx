@@ -2,15 +2,22 @@ import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import DynamicForm from "../features/form/DynamicForm.jsx";
-import SubmissionsList from "../features/submissions/SubmissionsList.jsx";
+// import SubmissionsList from "../features/submissions/SubmissionsListTest.jsx";
 import Grid from "@mui/material/Grid";
-import { useEffect, useState } from "react";
-import { fetchSchema } from "../lib/api.js";
+import { useCallback, useEffect, useState } from "react";
+import { fetchSchema, postSubmission } from "../lib/api.js";
+import Toast from "../components/Toast.jsx";
+import SubmissionsList from "../components/SubmissionsList.jsx";
 
 export default function DynamicFormPage() {
   const [schema, setSchema] = useState(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
+  const [snack, setSnack] = useState({
+    open: false,
+    severity: "success",
+    msg: "",
+  });
 
   useEffect(() => {
     fetchSchema()
@@ -19,31 +26,58 @@ export default function DynamicFormPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const handleFormSubmit = useCallback(async (formData) => {
+    try {
+      const res = await postSubmission(formData);
+      if (res?.ok) {
+        setSnack({
+          open: true,
+          severity: "success",
+          msg: res.message || "Submission saved successfully!",
+        });
+        return true;
+      } else {
+        setSnack({
+          open: true,
+          severity: "error",
+          msg: res?.error || "Submission failed.",
+        });
+        return false;
+      }
+    } catch {
+      setSnack({
+        open: true,
+        severity: "error",
+        msg: "Server error. Please try again later.",
+      });
+      return false;
+    }
+  }, []);
+
   if (loading) return <Container sx={{ py: 3 }}>Loading…</Container>;
   if (err) return <Container sx={{ py: 3 }}>Error: {err}</Container>;
   if (!schema) return <Container sx={{ py: 3 }}>No schema</Container>;
 
   return (
-    <Container maxWidth="lg" sx={{ py: 3 }}>
+    <Container maxWidth="xl" sx={{ py: 3 }}>
       <Grid container spacing={2} justifyContent="center">
-        <Grid size={{ xs: 12, md: 6, lg: 6 }}>
+        <Grid item xs={12} md={8} lg={8}>
           <Paper
             elevation={2}
             sx={{
               p: { xs: 2, sm: 3 },
               borderRadius: 3,
               mx: "auto",
-              maxWidth: 720,
             }}
           >
             <Typography variant="h5" align="center" sx={{ mb: 2 }}>
               {schema.title}
             </Typography>
-            <DynamicForm schema={schema} />
+            <DynamicForm schema={schema} onSubmit={handleFormSubmit} />{" "}
           </Paper>
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6, lg: 6 }}>
+        <Grid item xs={12} md={4} lg={4}>
           <Paper elevation={1} sx={{ p: 2, borderRadius: 2 }}>
             <Typography variant="h6" sx={{ mb: 1 }}>
               Submissions
@@ -52,6 +86,16 @@ export default function DynamicFormPage() {
           </Paper>
         </Grid>
       </Grid>
+      <Toast
+        open={snack.open}
+        onClose={() => setSnack((s) => ({ ...s, open: false }))}
+        severity={snack.severity}
+        message={snack.msg}
+        autoHideDuration={4000}
+        anchorOrigin={{ vertical: "center", horizontal: "center" }}
+        variant="filled"
+        snackKey={`${snack.severity}-${snack.msg}`}
+      />
     </Container>
   );
 }

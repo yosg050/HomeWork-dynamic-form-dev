@@ -1,14 +1,14 @@
-import Alert from "@mui/material/Alert";
-import Stack from "@mui/material/Stack";
+// import Alert from "@mui/material/Alert";
+// import Stack from "@mui/material/Stack";
 
-export default function SubmissionsList() {
-  const title = "Here will be the list of all forms.";
-  return (
-    <Stack spacing={1}>
-      <Alert severity="warning">{title}</Alert>
-    </Stack>
-  );
-}
+// export default function SubmissionsList() {
+//   const title = "Here will be the list of all forms.";
+//   return (
+//     <Stack spacing={1}>
+//       <Alert severity="warning">{title}</Alert>
+//     </Stack>
+//   );
+// }
 
 
 

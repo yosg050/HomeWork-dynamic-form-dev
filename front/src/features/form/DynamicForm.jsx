@@ -10,7 +10,7 @@ import {
 import FormActions from "./FormActions.jsx";
 import { postSubmission } from "../../lib/api.js";
 
-export default function DynamicForm({ schema }) {
+export default function DynamicForm({ schema, onSubmit }) {
   const yupSchema = buildYupFromSchema(schema);
 
   const form = useForm({
@@ -21,13 +21,23 @@ export default function DynamicForm({ schema }) {
 
   const { handleSubmit, reset, formState } = form;
 
-const onSubmit = async (data) => {
-  await postSubmission(data); 
-  reset(getDefaultValues(schema));
-};
+  // const onSubmit = async (data) => {
+  //   console.log("Submitting", data);
+
+  //   await postSubmission(data);
+  //   reset(getDefaultValues(schema));
+  // };
+  const handleFormSubmit = async (data) => {
+    const ok = await onSubmit?.(data);
+    if (ok) reset(getDefaultValues(schema));
+  };
 
   return (
-    <Box component="form" onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+    <Box
+      component="form"
+      onSubmit={handleSubmit(handleFormSubmit)}
+      autoComplete="off"
+    >
       <Stack spacing={3} sx={{ width: 1 }}>
         {schema.fields.map((fld) => (
           <FormField key={fld.name} fld={fld} form={form} />
@@ -35,9 +45,9 @@ const onSubmit = async (data) => {
         <FormActions justify="center">
           <FormActions.Reset
             onClick={() => reset(getDefaultValues(schema))}
-            disabled={form.formState.isSubmitting}
+            disabled={formState.isSubmitting}
           />
-          <FormActions.Submit disabled={form.formState.isSubmitting} />
+          <FormActions.Submit disabled={formState.isSubmitting} />
         </FormActions>
       </Stack>
     </Box>
