@@ -7,15 +7,26 @@ import {
   Typography,
 } from "@mui/material";
 
-function fmt(d) {
-  try {
-    return new Date(d).toLocaleString();
-  } catch {
-    return d ?? "-";
-  }
-}
-
 export default function SubmissionCard({ row }) {
+  const fmt = (d) => {
+    try {
+      return new Date(d).toLocaleString();
+    } catch {
+      return d ?? "-";
+    }
+  };
+  const fmtDate = (d) => {
+    try {
+      return new Date(d).toLocaleDateString("he-IL", {
+        day: "numeric",
+        month: "numeric",
+        year: "numeric",
+      });
+    } catch {
+      return d ?? "-";
+    }
+  };
+
   return (
     <Card variant="outlined">
       <CardHeader
@@ -23,7 +34,7 @@ export default function SubmissionCard({ row }) {
         sx={{ pb: 0.4, textAlign: "center" }}
       />
       <Divider />
-      
+
       <CardContent sx={{ textAlign: "center" }}>
         <Stack spacing={0.5}>
           <Typography variant="body2">
@@ -36,7 +47,7 @@ export default function SubmissionCard({ row }) {
             <strong>Gender:</strong> {row?.gender ?? "-"}
           </Typography>
           <Typography variant="body2">
-            <strong>Birthdate:</strong> {row?.birthdate ?? "-"}
+            <strong>Birthdate:</strong> {fmtDate(row?.birthdate)}
           </Typography>
         </Stack>
       </CardContent>

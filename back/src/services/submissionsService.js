@@ -1,17 +1,16 @@
-import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
 import {
   putSubmission,
   scanSubmissions,
 } from "../repositories/submissionsRepo.js";
 
-export async function saveSubmission(validData) {
-  const submissionId = uuidv4();
+export async function saveSubmission(validData, hash) {
+ 
 
   const passwordHash = await bcrypt.hash(String(validData.password), 10);
 
   const item = {
-    submissionId,
+    hash,
     email: String(validData.email).toLowerCase().trim(),
     username: String(validData.username || "").trim(),
     passwordHash,
@@ -28,6 +27,7 @@ export async function saveSubmission(validData) {
   const { passwordHash: _, ...safe } = item;
   return safe;
 }
+
 
 export async function listSubmissions({ limit = 100, cursor } = {}) {
   const { items: rawItems = [], nextCursor } = await scanSubmissions({

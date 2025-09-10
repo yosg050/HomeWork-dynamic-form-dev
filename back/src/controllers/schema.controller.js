@@ -14,7 +14,12 @@ export async function getSchemaHandler(req, res) {
     res.setHeader("Cache-Control", "no-cache");
     res.json({ schema });
   } catch (err) {
+    const status = err?.status ?? 500;
+    const code = err?.code ?? "INTERNAL_ERROR";
+    const msg = err?.message ?? "Unexpected server error";
+
     console.error("GET /schema failed:", err);
-    res.status(500).json({ ok: false, error: "INTERNAL_ERROR" });
+
+    res.status(status).json({ ok: false, error: code, message: msg });
   }
 }
