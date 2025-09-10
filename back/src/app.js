@@ -7,6 +7,8 @@ import { getSchema, getSchemaETag } from "./schema.js";
 import { listSubmissions, saveSubmission } from "./services/submissionsService.js";
 import submissionsRoutes from "./routes/submissions.routes.js";
 import schemaRoutes from "./routes/schema.routes.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
+import { notFound } from "./middlewares/notFound.js";
 
 dotenv.config();
 
@@ -16,7 +18,8 @@ app.use(express.json());
 
 app.use("/schema", schemaRoutes);
 app.use("/submissions", submissionsRoutes);
-
+app.use(notFound);
+app.use(errorHandler);
 
 
 const port = process.env.PORT || 4000;

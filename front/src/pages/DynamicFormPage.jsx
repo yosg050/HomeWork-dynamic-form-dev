@@ -32,6 +32,7 @@ export default function DynamicFormPage() {
     async (formData) => {
       try {
         const res = await submitForm(formData);
+
         if (res?.ok) {
           setSnack({
             open: true,
@@ -40,36 +41,47 @@ export default function DynamicFormPage() {
           });
           return true;
         } else {
-          setSnack({
-            open: true,
-            severity: "error",
-            msg: res?.error || "Submission failed.",
-          });
+          let msg = res?.message || "Submission failed.";
+          if (res?.error === "DUPLICATE_SUBMISSION") {
+            msg = "This form already exists in the system.";
+          }
+          setSnack({ open: true, severity: "error", msg });
           return false;
         }
-      } catch {
-        setSnack({
-          open: true,
-          severity: "error",
-          msg: "Server error. Please try again later.",
-        });
+      } catch (err) {
+        let msg = "Server error. Please try again later.";
+        try {
+          const raw = String(err?.message ?? "");
+          const start = raw.indexOf("{");
+          if (start >= 0) {
+            const body = JSON.parse(raw.slice(start)); // { ok, error, message, details }
+            if (body?.error === "DUPLICATE_SUBMISSION") {
+              msg = "This form already exists in the system.";
+            } else if (body?.message) {
+              msg = body.message;
+            }
+          }
+        } catch {}
+
+        setSnack({ open: true, severity: "error", msg });
         return false;
       }
     },
     [submitForm]
   );
 
+  
   if (loading) return <Container sx={{ py: 3 }}>Loading…</Container>;
   if (err) return <Container sx={{ py: 3 }}>Error: {err}</Container>;
   if (!schema) return <Container sx={{ py: 3 }}>No schema</Container>;
-
+  
   return (
     <Container maxWidth={false} sx={{ py: 2 }}>
       <Grid
         container
         spacing={5}
         sx={{ height: "calc(100vh - 100px)", marginLeft: 5, marginRight: 5 }}
-      >
+        >
         <Grid size={{ xs: 12, md: 5 }} sx={{ height: "100%" }}>
           <Paper
             elevation={1}
@@ -79,7 +91,7 @@ export default function DynamicFormPage() {
               display: "flex",
               flexDirection: "column",
             }}
-          >
+            >
             <Typography variant="h5" align="center" sx={{ mb: 3 }}>
               {schema.title}
             </Typography>
@@ -88,7 +100,7 @@ export default function DynamicFormPage() {
                 schema={schema}
                 onSubmit={handleFormSubmit}
                 submitting={isPending}
-              />
+                />
             </Box>
           </Paper>
         </Grid>
@@ -102,7 +114,7 @@ export default function DynamicFormPage() {
               display: "flex",
               flexDirection: "column",
             }}
-          >
+            >
             <Typography variant="h5" align="center" sx={{ mb: 2 }}>
               Past Submissions{" "}
             </Typography>
@@ -121,7 +133,49 @@ export default function DynamicFormPage() {
         anchorOrigin={{ vertical: "center", horizontal: "center" }}
         variant="filled"
         snackKey={`${snack.severity}-${snack.msg}`}
-      />
+        />
     </Container>
   );
 }
+
+// const handleFormSubmit = useCallback(
+//   async (formData) => {
+//     try {
+//       const res = await submitForm(formData);
+
+//       if (res?.ok) {
+//         setSnack({
+//           open: true,
+//           severity: "success",
+//           msg: res.message || "Submission saved successfully!",
+//         });
+//         return true;
+//       } else {
+//         let msg = res?.message || "Submission failed.";
+//         if (res?.code === "DUPLICATE_SUBMISSION") {
+//           msg = "This form already exists in the system.";
+//         }
+
+//         setSnack({
+//           open: true,
+//           severity: "error",
+//           msg,
+//         });
+//         return false;
+//       }
+//     } catch (err) {
+//       let msg = "Server error. Please try again later.";
+//       if (err?.code === "DUPLICATE_SUBMISSION") {
+//         msg = "This form already exists in the system.";
+//       }
+
+//       setSnack({
+//         open: true,
+//         severity: "error",
+//         msg,
+//       });
+//       return false;
+//     }
+//   },
+//   [submitForm]
+// );

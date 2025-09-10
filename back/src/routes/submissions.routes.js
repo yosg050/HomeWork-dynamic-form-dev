@@ -3,10 +3,11 @@ import {
   createSubmission,
   getSubmissions,
 } from "../controllers/submissions.controller.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const router = Router();
 
-router.post("/", createSubmission);
-router.get("/", getSubmissions);
+router.post("/", asyncHandler(createSubmission));
+router.get("/", asyncHandler(getSubmissions));
 
 export default router;

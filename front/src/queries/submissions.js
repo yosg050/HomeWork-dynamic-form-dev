@@ -9,20 +9,18 @@ export function useSubmissions() {
   });
 }
 
-
-
 export function useCachedSubmissions() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: postSubmission,
-     onSuccess: (response, originalFormData) => {
-    const newSubmission = {
-      ...originalFormData,
-      id: Date.now(),
-      createdAt: new Date().toISOString(),
-    }; 
-   
+    onSuccess: (response, originalFormData) => {
+      const newSubmission = {
+        ...originalFormData,
+        id: Date.now(),
+        createdAt: new Date().toISOString(),
+      };
+
       queryClient.setQueryData(["submissions"], (old = []) => [
         newSubmission,
         ...old,

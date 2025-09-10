@@ -3,10 +3,9 @@ import {
   putSubmission,
   scanSubmissions,
 } from "../repositories/submissionsRepo.js";
+import { InternalError } from "../errors/DomainErrors.js";
 
 export async function saveSubmission(validData, hash) {
- 
-
   const passwordHash = await bcrypt.hash(String(validData.password), 10);
 
   const item = {
@@ -21,13 +20,14 @@ export async function saveSubmission(validData, hash) {
 
   const result = await putSubmission(item);
   if (result.$metadata.httpStatusCode !== 200) {
-    throw new Error("Failed to save submission");
+    throw new InternalError("Failed to save submission", {
+      http: result?.$metadata,
+    });
   }
 
   const { passwordHash: _, ...safe } = item;
   return safe;
 }
-
 
 export async function listSubmissions({ limit = 100, cursor } = {}) {
   const { items: rawItems = [], nextCursor } = await scanSubmissions({

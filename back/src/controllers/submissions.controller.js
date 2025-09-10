@@ -10,65 +10,39 @@ import {
 import { createSubmissionHash } from "../utils/hash.js";
 
 export async function createSubmission(req, res) {
-  try {
-    const schema = await getSchema();
-    const yupSchema = buildYupFromSchema(schema);
+  const schema = await getSchema();
+  const yupSchema = buildYupFromSchema(schema);
 
-    const validData = await yupSchema
-      .validate(req.body, {
-        abortEarly: false,
-        stripUnknown: true,
-      })
-      .catch((err) => {
-        throw new ValidationError(err.errors);
+  const validData = await yupSchema
+    .validate(req.body, { abortEarly: false, stripUnknown: true })
+    .catch((err) => {
+      throw new ValidationError("Form validation failed", {
+        fields: (err?.inner || []).map((e) => ({
+          path: e.path,
+          message: e.message,
+          type: e.type,
+        })),
       });
-
-    const hash = createSubmissionHash(validData, schema);
-    const saved = await saveSubmission(validData, hash);
-    console.log("Received submission: ", validData); // testing
-
-    res.status(201).json({
-      ok: true,
-      message: "Submission saved successfully",
-      // data: saved,
     });
-  } catch (err) {
-    const status = err.status ?? 500;
-    const code = err.code ?? "INTERNAL_ERROR";
-    const message = err.message ?? "Unexpected server error";
 
-    console.error("ERROR:", err);
+  const hash = createSubmissionHash(validData, schema);
+  const saved = await saveSubmission(validData, hash);
 
-    res.status(status).json({ ok: false, error: code, message });
-  }
+  res.status(201).json({
+    ok: true,
+    message: "Submission saved successfully",
+    // data: saved,
+  });
 }
 
-
 export async function getSubmissions(req, res) {
-  try {
-    const limit = Math.min(Number(req.query.limit) || 100, 500);
+  const limit = Math.min(Number(req.query.limit) || 100, 500);
+  const cursor = req.query.cursor ? JSON.parse(req.query.cursor) : undefined;
 
-    let cursor;
-    if (req.query.cursor != null) {
-      try {
-        cursor = JSON.parse(req.query.cursor);
-      } catch (e) {
-        return res.status(400).json({
-          ok: false,
-          error: "VALIDATION_ERROR",
-          message: "'cursor' must be a valid JSON string",
-        });
-      }
-    }
-
-    const { items, nextCursor } = await listSubmissions({ limit, cursor });
-    res.json({ ok: true, items, nextCursor });
-  } catch (err) {
-    const status = err?.status ?? 500;
-    const code = err?.code ?? "INTERNAL_ERROR";
-    const msg = err?.message ?? "Unexpected server error";
-
-    console.error("GET /submissions failed:", err);
-    res.status(status).json({ ok: false, error: code, message: msg });
-  }
+  const { items, nextCursor } = await listSubmissions({ limit, cursor });
+  res.json({
+    ok: true,
+    items,
+    nextCursor,
+  });
 }

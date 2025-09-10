@@ -1,18 +1,8 @@
 import { GetCommand, PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../adapters/dynamodb.adapter.js";
-import { DuplicateSubmissionError } from "../errors/DomainErrors.js";
+import { DuplicateSubmissionError, ValidationError } from "../errors/DomainErrors.js";
 
 const TABLE = process.env.DYNAMO_TABLE || "Submissions";
-
-export async function getSubmissionByHash(hash) {
-  const { Item } = await ddb.send(
-    new GetCommand({
-      TableName: TABLE,
-      Key: { hash },
-    })
-  );
-  return Item ?? null;
-}
 
 export async function putSubmission(item) {
   try {
@@ -26,29 +16,54 @@ export async function putSubmission(item) {
     );
   } catch (err) {
     if (err?.name === "ConditionalCheckFailedException") {
-      throw new DuplicateSubmissionError();
+      throw new DuplicateSubmissionError(
+        "Submission with same hash already exists",
+        { hash: item.hash }
+      );
     }
-    throw err;
+    if (err?.name === "ValidationException") {
+      throw new ValidationError("Invalid item for DynamoDB", {
+        cause: err.message,
+      });
+    }
+    throw new InternalError("DB putSubmission failed", { cause: err?.message });
   }
 }
-
 
 export async function scanSubmissions({ limit = 100, cursor }) {
-  const params = {
-    TableName: TABLE,
-    Limit: limit,
-    ProjectionExpression:
-      "hash, email, username, birthdate, gender, createdAt",
-  };
-  if (cursor) {
-    params.ExclusiveStartKey = { hash: cursor };
-    // console.log("Scanning from cursor:", cursor); //testing
-  }
-  const out = await ddb.send(new ScanCommand(params));
-  // console.log("ScanCommand output:", out); //testing
+  try {
+    const params = {
+      TableName: TABLE,
+      Limit: limit,
+      ProjectionExpression: "#h, email, username, birthdate, gender, createdAt",
+      ExpressionAttributeNames: { "#h": "hash" },
+    };
 
-  return {
-    items: out.Items || [],
-    nextCursor: out.LastEvaluatedKey?.hash || undefined,
-  };
+    // cursor = hash string (אחיד מול הקונטרולר/סרביס)
+     if (cursor) {
+       if (typeof cursor === "string") {
+         params.ExclusiveStartKey = { hash: cursor };
+       } else if (typeof cursor === "object") {
+         params.ExclusiveStartKey = cursor;
+       }
+     }
+
+
+    const out = await ddb.send(new ScanCommand(params));
+
+    return {
+      items: out.Items || [],
+      nextCursor: out.LastEvaluatedKey ?? undefined,
+    };
+  } catch (err) {
+    if (err?.name === "ValidationException") {
+      throw new ValidationError("Invalid scan parameters", {
+        cause: err.message,
+      });
+    }
+    throw new InternalError("DB scanSubmissions failed", {
+      cause: err.message,
+    });
+  }
 }
+
