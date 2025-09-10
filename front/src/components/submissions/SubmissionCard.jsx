@@ -15,19 +15,23 @@ function fmt(d) {
   }
 }
 
-
 export default function SubmissionCard({ row }) {
-
   return (
     <Card variant="outlined">
       <CardHeader
-        title={`${row?.username ?? "-"} · ${row?.email ?? "-"}`}
-        subheader={fmt(row?.createdAt)}
-        sx={{ pb: 0.5 }}
+        title={`${row?.username ?? "-"}`}
+        sx={{ pb: 0.4, textAlign: "center" }}
       />
       <Divider />
-      <CardContent sx={{ pt: 1.5 }}>
+      
+      <CardContent sx={{ textAlign: "center" }}>
         <Stack spacing={0.5}>
+          <Typography variant="body2">
+            <strong>Created At:</strong> {fmt(row?.createdAt)}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Email:</strong> {row?.email ?? "-"}
+          </Typography>
           <Typography variant="body2">
             <strong>Gender:</strong> {row?.gender ?? "-"}
           </Typography>

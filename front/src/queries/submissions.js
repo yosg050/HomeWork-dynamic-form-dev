@@ -16,11 +16,20 @@ export function useCachedSubmissions() {
 
   return useMutation({
     mutationFn: postSubmission,
-    onSuccess:(created) =>{
+     onSuccess: (response, originalFormData) => {
+    const newSubmission = {
+      ...originalFormData,
+      id: Date.now(),
+      createdAt: new Date().toISOString(),
+    }; 
+   
       queryClient.setQueryData(["submissions"], (old = []) => [
-        created,
+        newSubmission,
         ...old,
       ]);
-    }
-  })
+    },
+    onError: (error) => {
+      console.error("Error creating submission:", error);
+    },
+  });
 }

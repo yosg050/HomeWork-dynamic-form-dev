@@ -16,7 +16,6 @@ export default function SubmissionsTabs() {
   return (
     <Paper variant="outlined" sx={{ p: 2, height: "100%", overflow: "auto" }}>
       <Stack spacing={2}>
-        <Typography variant="h6">Past Submissions</Typography>
 
         {isLoading && (
           <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
