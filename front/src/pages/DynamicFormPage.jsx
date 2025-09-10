@@ -10,7 +10,7 @@ import Toast from "../components/common/Toast.jsx";
 import SubmissionsList from "../components/submissions/SubmissionsList.jsx";
 import { getSchema } from "../api/schema.js";
 import { postSubmission } from "../api/submissions.js";
-import { Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import SubmissionsTabs from "../components/submissions/SubmissionsTabs.jsx";
 import { useCachedSubmissions } from "../queries/submissions.js";
 
@@ -66,8 +66,12 @@ export default function DynamicFormPage() {
   if (!schema) return <Container sx={{ py: 3 }}>No schema</Container>;
 
   return (
-    <Container maxWidth="xl" sx={{ py: 2 }}>
-      <Grid container spacing={3} sx={{ height: "calc(100vh - 100px)" }}>
+    <Container maxWidth={false} sx={{ py: 2 }}>
+      <Grid
+        container
+        spacing={3}
+        sx={{ height: "calc(100vh - 100px)", marginLeft: 5, marginRight: 5 }}
+      >
         <Grid size={{ xs: 12, md: 5 }} sx={{ height: "100%" }}>
           <Paper
             elevation={1}
@@ -101,7 +105,7 @@ export default function DynamicFormPage() {
               flexDirection: "column",
             }}
           >
-            <Typography variant="h6" sx={{ mb: 2 }}>
+            <Typography variant="h5" align="center" sx={{ mb: 2 }}>
               Submissions
             </Typography>
             <Box sx={{ flexGrow: 1, overflow: "hidden" }}>
