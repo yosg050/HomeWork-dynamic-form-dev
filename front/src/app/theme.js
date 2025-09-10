@@ -1,10 +1,18 @@
 import { createTheme } from "@mui/material/styles";
 
-const theme = createTheme({
-  palette: { mode: "light" },
+export const theme = createTheme({
   components: {
-    MuiContainer: { defaultProps: { maxWidth: "md" } },
-    MuiPaper: { styleOverrides: { root: { borderRadius: 12 } } },
+    MuiContainer: {
+      defaultProps: {
+        maxWidth: false,
+      },
+      styleOverrides: {
+        root: {
+          paddingLeft: "16px",
+          paddingRight: "16px",
+        },
+      },
+    },
   },
 });
 

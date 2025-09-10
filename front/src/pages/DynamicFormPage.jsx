@@ -6,10 +6,13 @@ import DynamicForm from "../components/form/DynamicForm.jsx";
 import Grid from "@mui/material/Grid";
 import { useCallback, useEffect, useState } from "react";
 // import { fetchSchema, postSubmission } from "../api/submissions.js";
-import Toast from "../components/Toast.jsx";
+import Toast from "../components/common/Toast.jsx";
 import SubmissionsList from "../components/submissions/SubmissionsList.jsx";
 import { getSchema } from "../api/schema.js";
 import { postSubmission } from "../api/submissions.js";
+import { Box } from "@mui/material";
+import SubmissionsTabs from "../components/submissions/SubmissionsTabs.jsx";
+import { useCachedSubmissions } from "../queries/submissions.js";
 
 export default function DynamicFormPage() {
   const [schema, setSchema] = useState(null);
@@ -20,6 +23,7 @@ export default function DynamicFormPage() {
     severity: "success",
     msg: "",
   });
+  const { mutateAsync: createSubmission, isPending } = useCachedSubmissions();
 
   useEffect(() => {
     getSchema()
@@ -37,6 +41,7 @@ export default function DynamicFormPage() {
           severity: "success",
           msg: res.message || "Submission saved successfully!",
         });
+        await createSubmission(formData);
         return true;
       } else {
         setSnack({
@@ -61,30 +66,47 @@ export default function DynamicFormPage() {
   if (!schema) return <Container sx={{ py: 3 }}>No schema</Container>;
 
   return (
-    <Container maxWidth="xl" sx={{ py: 3 }}>
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={12} md={8} lg={8}>
+    <Container maxWidth="xl" sx={{ py: 2 }}>
+      <Grid container spacing={3} sx={{ height: "calc(100vh - 100px)" }}>
+        <Grid size={{ xs: 12, md: 5 }} sx={{ height: "100%" }}>
           <Paper
-            elevation={2}
+            elevation={1}
             sx={{
-              p: { xs: 2, sm: 3 },
-              borderRadius: 3,
-              mx: "auto",
+              p: 3,
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <Typography variant="h5" align="center" sx={{ mb: 2 }}>
+            <Typography variant="h5" align="center" sx={{ mb: 3 }}>
               {schema.title}
             </Typography>
-            <DynamicForm schema={schema} onSubmit={handleFormSubmit} />{" "}
+            <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+              <DynamicForm
+                schema={schema}
+                onSubmit={handleFormSubmit}
+                submitting={isPending}
+              />
+            </Box>
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={4} lg={4}>
-          <Paper elevation={1} sx={{ p: 2, borderRadius: 2 }}>
-            <Typography variant="h6" sx={{ mb: 1 }}>
+        <Grid size={{ xs: 12, md: 7 }} sx={{ height: "100%" }}>
+          <Paper
+            elevation={1}
+            sx={{
+              p: 3,
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Typography variant="h6" sx={{ mb: 2 }}>
               Submissions
             </Typography>
-            <SubmissionsList />
+            <Box sx={{ flexGrow: 1, overflow: "hidden" }}>
+              <SubmissionsTabs />
+            </Box>
           </Paper>
         </Grid>
       </Grid>
