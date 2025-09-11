@@ -46,7 +46,6 @@ export function SubmissionsTimelineChart({ data }) {
   const maxCount = Math.max(...Object.values(timeline));
   const peakDay = timelineStats.peakDay;
 
-  // צבעים דינמיים לפי עוצמה
   const getBarColor = (count, index) => {
     if (count === 0) return "#f5f5f5";
     if (count === maxCount && count > 0) return "#f44336"; 
@@ -155,7 +154,6 @@ export function SubmissionsTimelineChart({ data }) {
                   </Typography>
                 )}
 
-                {/* תאריך (כל 5 ימים או ימים עם הגשות) */}
                 {(index % Math.max(1, Math.floor(timelineData.length / 8)) ===
                   0 ||
                   day.count > 0) && (
@@ -181,7 +179,6 @@ export function SubmissionsTimelineChart({ data }) {
           })}
         </Box>
 
-        {/* סטטיסטיקות */}
         <Box
           sx={{
             mt: 3,
