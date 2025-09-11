@@ -7,5 +7,7 @@ export async function postSubmission(payload) {
 export async function listSubmissions() {
   const res = await apiFetch("/submissions");
   const data = await res.json();
+  console.log("data ", data);
+  
   return data.items ?? [];
 }

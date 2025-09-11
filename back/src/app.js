@@ -4,11 +4,13 @@ import cors from "cors";
 import dotenv from "dotenv";
 import {buildYupFromSchema } from "../../shared/index.js";
 import { getSchema, getSchemaETag } from "./schema.js";
-import { listSubmissions, saveSubmission } from "./services/submissionsService.js";
+import { listSubmissions, saveSubmission } from "./services/submissions.Service.js";
 import submissionsRoutes from "./routes/submissions.routes.js";
 import schemaRoutes from "./routes/schema.routes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { notFound } from "./middlewares/notFound.js";
+import analyticsRoutes from "./routes/analytics.routes.js";
+
 
 dotenv.config();
 
@@ -18,9 +20,8 @@ app.use(express.json());
 
 app.use("/schema", schemaRoutes);
 app.use("/submissions", submissionsRoutes);
-app.use(notFound);
+app.use("/analytics", analyticsRoutes);
 app.use(errorHandler);
-
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {

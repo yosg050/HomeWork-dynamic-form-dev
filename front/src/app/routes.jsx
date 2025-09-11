@@ -1,8 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
 import DynamicFormPage from "../pages/DynamicFormPage.jsx";
-// import NotFound from "../pages/NotFound.jsx";
+import App from "./../App.jsx";
+import { lazy } from "react";
+const AnalyticsPage = lazy(() => import("../pages/AnalyticsPage.jsx"));
 
 export const router = createBrowserRouter([
-  { path: "/", element: <DynamicFormPage /> },
-  // { path: "*", element: <NotFound /> },
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      { index: true, element: <DynamicFormPage /> },
+      { path: "analytics", element: <AnalyticsPage /> },
+    ],
+  },
 ]);

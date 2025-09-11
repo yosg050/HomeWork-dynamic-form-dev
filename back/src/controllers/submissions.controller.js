@@ -6,10 +6,11 @@ import { getSchema } from "../schema.js";
 import {
   listSubmissions,
   saveSubmission,
-} from "../services/submissionsService.js";
+} from "../services/submissions.Service.js";
 import { createSubmissionHash } from "../utils/hash.js";
 
 export async function createSubmission(req, res) {
+ 
   const schema = await getSchema();
   const yupSchema = buildYupFromSchema(schema);
 
@@ -36,6 +37,7 @@ export async function createSubmission(req, res) {
 }
 
 export async function getSubmissions(req, res) {
+  console.log("test Submissions : ", new Date()); //testing
   const limit = Math.min(Number(req.query.limit) || 100, 500);
   const cursor = req.query.cursor ? JSON.parse(req.query.cursor) : undefined;
 

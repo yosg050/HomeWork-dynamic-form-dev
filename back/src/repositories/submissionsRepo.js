@@ -39,7 +39,6 @@ export async function scanSubmissions({ limit = 100, cursor }) {
       ExpressionAttributeNames: { "#h": "hash" },
     };
 
-    // cursor = hash string (אחיד מול הקונטרולר/סרביס)
      if (cursor) {
        if (typeof cursor === "string") {
          params.ExclusiveStartKey = { hash: cursor };

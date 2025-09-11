@@ -9,6 +9,7 @@ import { getSchema } from "../api/schema.js";
 import { Box } from "@mui/material";
 import SubmissionsTabs from "../components/submissions/SubmissionsTabs.jsx";
 import { useCachedSubmissions } from "../queries/submissions.js";
+import Loading from "../components/common/Loading.jsx";
 
 export default function DynamicFormPage() {
   const [schema, setSchema] = useState(null);
@@ -71,7 +72,7 @@ export default function DynamicFormPage() {
   );
 
   
-  if (loading) return <Container sx={{ py: 3 }}>Loading…</Container>;
+  if (loading) return <Container sx={{ py: 3 }}><Loading/></Container>;
   if (err) return <Container sx={{ py: 3 }}>Error: {err}</Container>;
   if (!schema) return <Container sx={{ py: 3 }}>No schema</Container>;
   
@@ -137,45 +138,3 @@ export default function DynamicFormPage() {
     </Container>
   );
 }
-
-// const handleFormSubmit = useCallback(
-//   async (formData) => {
-//     try {
-//       const res = await submitForm(formData);
-
-//       if (res?.ok) {
-//         setSnack({
-//           open: true,
-//           severity: "success",
-//           msg: res.message || "Submission saved successfully!",
-//         });
-//         return true;
-//       } else {
-//         let msg = res?.message || "Submission failed.";
-//         if (res?.code === "DUPLICATE_SUBMISSION") {
-//           msg = "This form already exists in the system.";
-//         }
-
-//         setSnack({
-//           open: true,
-//           severity: "error",
-//           msg,
-//         });
-//         return false;
-//       }
-//     } catch (err) {
-//       let msg = "Server error. Please try again later.";
-//       if (err?.code === "DUPLICATE_SUBMISSION") {
-//         msg = "This form already exists in the system.";
-//       }
-
-//       setSnack({
-//         open: true,
-//         severity: "error",
-//         msg,
-//       });
-//       return false;
-//     }
-//   },
-//   [submitForm]
-// );
