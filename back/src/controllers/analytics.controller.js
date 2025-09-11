@@ -1,7 +1,6 @@
 import { getAnalytics } from "../services/analytics.Service.js";
 
 export async function getAnalyticsController(req, res) {
-  console.log("Analytics request: ", new Date());
 
   try {
     const analytics = await getAnalytics();

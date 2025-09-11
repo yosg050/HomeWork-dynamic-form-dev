@@ -1,35 +1,3 @@
-// import { Alert, Box, CircularProgress, Paper, Stack } from "@mui/material";
-// import { useSubmissions } from "../../queries/submissions";
-// import SubmissionsList from "./SubmissionsList";
-
-
-// function filterByTab(items, tab) {
-//   if (tab === "all") return items;
-//   return (items ?? []).filter((r) => (r?.gender ?? "").toLowerCase() === tab);
-// }
-
-
-// export default function SubmissionsTabs() {
-//   const { data, isLoading, isError } = useSubmissions();
-
-//   return (
-//     <Paper variant="outlined" sx={{ p: 2, height: "100%", overflow: "auto" }}>
-//       <Stack spacing={2}>
-
-//         {isLoading && (
-//           <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
-//             <CircularProgress />
-//           </Box>
-//         )}
-
-//         {isError && <Alert severity="error">Failed to load submissions</Alert>}
-
-//         {!isLoading && !isError && <SubmissionsList items={data ?? []} />}
-//       </Stack>
-//     </Paper>
-//   );
-// }
-
 import { useEffect, useRef } from "react";
 import {
   Stack,
@@ -40,8 +8,7 @@ import {
   Paper,
 } from "@mui/material";
 import SubmissionCard from "./SubmissionCard";
-import { useSubmissionsInfinite } from "../../queries/submissions";
-// import { useSubmissionsInfinite } from "../../hooks/useSubmissions";
+import { useSubmissionsInfinite } from "../../hooks/submissions";
 
 export default function SubmissionsTabs() {
   const LIMIT = 50;
@@ -57,7 +24,6 @@ export default function SubmissionsTabs() {
 
   const items = data?.pages?.flatMap((p) => p.items) ?? [];
 
-  // אינסוף-גלילה: כשמגיעים לתחתית נטען עוד
   const sentinelRef = useRef(null);
   useEffect(() => {
     if (!sentinelRef.current || !hasNextPage || isFetchingNextPage) return;
@@ -98,8 +64,6 @@ export default function SubmissionsTabs() {
 
   return (
     <Paper variant="outlined" sx={{ p: 2, height: "100%", overflow: "auto" }}>
-
-
       <Stack spacing={2}>
         {items.map((row, idx) => (
           <div key={row.hash ?? row.id ?? row.createdAt ?? idx}>

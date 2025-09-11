@@ -8,10 +8,16 @@ export function StatsCard({ title, value, subtitle, icon, color = "primary" }) {
         flex: 1,
         minWidth: "200px",
       }}
+      role="region"
+      aria-label={`${title}: ${value}`}
     >
       <CardContent sx={{ textAlign: "center", p: 2 }}>
         {icon && (
-          <Box color={`${color}.main`} sx={{ fontSize: 32, mb: 1 }}>
+          <Box
+            color={`${color}.main`}
+            sx={{ fontSize: 32, mb: 1 }}
+            aria-hidden="true"
+          >
             {icon}
           </Box>
         )}

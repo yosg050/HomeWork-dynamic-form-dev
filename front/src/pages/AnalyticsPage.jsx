@@ -7,12 +7,12 @@ import {
   Box,
   Container,
 } from "@mui/material";
-import { useAnalytics } from "../queries/analytics";
 import { SummaryCards } from "../components/analytics/SummaryCards";
 import { GenderChart } from "../components/analytics/GenderChart";
 import { AgeChart } from "../components/analytics/AgeChart";
 import Loading from "../components/common/Loading";
 import { SubmissionsTimelineChart } from "../components/analytics/SubmissionsTimelineChart";
+import { useAnalytics } from "../hooks/analytics";
 
 function AnalyticsContent() {
   const { data, isLoading, error } = useAnalytics();
@@ -92,7 +92,7 @@ function AnalyticsContent() {
           </Grid>
         </Box>
 
-        <Box >
+        <Box>
           <Grid container spacing={3} justifyContent="center">
             <Grid size={{ xs: 10, md: 10 }}>
               <SubmissionsTimelineChart data={analyticsData.derived} />

@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import SubmissionCard from "./SubmissionCard";
 
 export default function SubmissionsList({items = []}) {

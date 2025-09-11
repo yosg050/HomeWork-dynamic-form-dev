@@ -5,16 +5,14 @@ import DynamicForm from "../components/form/DynamicForm.jsx";
 import Grid from "@mui/material/Grid";
 import { useCallback, useEffect, useState } from "react";
 import Toast from "../components/common/Toast.jsx";
-import { getSchema } from "../api/schema.js";
 import { Box } from "@mui/material";
 import SubmissionsTabs from "../components/submissions/SubmissionsTabs.jsx";
-import { useCachedSubmissions } from "../queries/submissions.js";
+import { useCachedSubmissions } from "../hooks/submissions.js";
 import Loading from "../components/common/Loading.jsx";
+import { useSchema } from "../hooks/schema.js";
 
 export default function DynamicFormPage() {
-  const [schema, setSchema] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState(null);
+  const { data: schema, isLoading: loading, isError, error } = useSchema();
   const { mutateAsync: submitForm, isPending } = useCachedSubmissions();
   const [snack, setSnack] = useState({
     open: false,
@@ -22,12 +20,7 @@ export default function DynamicFormPage() {
     msg: "",
   });
 
-  useEffect(() => {
-    getSchema()
-      .then((res) => setSchema(res?.schema ?? res))
-      .catch((e) => setErr(e.message || "Failed to load schema"))
-      .finally(() => setLoading(false));
-  }, []);
+  const err = isError ? error?.message || "Failed to load schema" : null;
 
   const handleFormSubmit = useCallback(
     async (formData) => {
@@ -71,18 +64,22 @@ export default function DynamicFormPage() {
     [submitForm]
   );
 
-  
-  if (loading) return <Container sx={{ py: 3 }}><Loading/></Container>;
+  if (loading)
+    return (
+      <Container sx={{ py: 3 }}>
+        <Loading />
+      </Container>
+    );
   if (err) return <Container sx={{ py: 3 }}>Error: {err}</Container>;
   if (!schema) return <Container sx={{ py: 3 }}>No schema</Container>;
-  
+
   return (
     <Container maxWidth={false} sx={{ py: 2 }}>
       <Grid
         container
         spacing={5}
         sx={{ height: "calc(100vh - 100px)", marginLeft: 5, marginRight: 5 }}
-        >
+      >
         <Grid size={{ xs: 12, md: 5 }} sx={{ height: "100%" }}>
           <Paper
             elevation={1}
@@ -92,16 +89,16 @@ export default function DynamicFormPage() {
               display: "flex",
               flexDirection: "column",
             }}
-            >
+          >
             <Typography variant="h5" align="center" sx={{ mb: 3 }}>
-              {schema.title}
+              {schema?.title ?? "Dynamic Form"}
             </Typography>
             <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
               <DynamicForm
                 schema={schema}
                 onSubmit={handleFormSubmit}
                 submitting={isPending}
-                />
+              />
             </Box>
           </Paper>
         </Grid>
@@ -115,11 +112,11 @@ export default function DynamicFormPage() {
               display: "flex",
               flexDirection: "column",
             }}
-            >
+          >
             <Typography variant="h5" align="center" sx={{ mb: 2 }}>
               Past Submissions{" "}
             </Typography>
-            <Box sx={{ flexGrow: 1, overflow: "hidden" }}>
+            <Box sx={{ flexGrow: 1, overflow: "auto" }}>
               <SubmissionsTabs />
             </Box>
           </Paper>
@@ -131,10 +128,10 @@ export default function DynamicFormPage() {
         severity={snack.severity}
         message={snack.msg}
         autoHideDuration={4000}
-        anchorOrigin={{ vertical: "center", horizontal: "center" }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         variant="filled"
         snackKey={`${snack.severity}-${snack.msg}`}
-        />
+      />
     </Container>
   );
 }

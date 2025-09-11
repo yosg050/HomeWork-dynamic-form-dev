@@ -7,7 +7,6 @@ export async function getAnalytics() {
   if (!data.ok) {
     throw new Error(data.message || "Failed to fetch analytics");
   }
- console.log(data);
  
   return (
     data.analytics ?? {
