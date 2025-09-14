@@ -44,4 +44,30 @@ Key Features:
 ## Tech Stack
 - **Frontend:** React, Material UI
 - **Backend:** Node.js (Express), AWS Lambda ready
+
+## Running Locally
+
+### Prerequisites
+- Node.js >= 18
+
+### Clone the repository
+```bash
+git clone https://github.com/yosg050/HomeWork-dynamic-form-dev.git
+cd HomeWork-dynamic-form-dev
+
+# Frontend
+cd front
+npm install
+npm run dev
+
+# Backend
+cd back
+npm install
+npm start
+
+PORT=4000
+DYNAMODB_TABLE=DynamicFormTable
+AWS_REGION=us-east-1
+
 - **Database:** AWS DynamoDB
+
