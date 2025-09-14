@@ -12,7 +12,7 @@ export async function apiFetch(
   path,
   { method = "GET", headers = {}, body } = {}
 ) {
-  const fullPath = API_BASE ? `${API_BASE}${path}` : `/api${path}`;
+  const fullPath = `${API_BASE}${path}`;
 
   const res = await fetch(fullPath, {
     method,

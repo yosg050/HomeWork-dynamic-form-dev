@@ -13,7 +13,7 @@ export async function getAnalytics() {
       totalSubmissions: 0,
       perGender: {},
       averageAgeYears: null,
-      derived: { agesCounted: 0, ageBuckets: {}, lastSubmissionAt: null },
+      derived: { ageBuckets: {}, lastSubmissionAt: null },
     }
   );
 }

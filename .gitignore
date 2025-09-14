@@ -52,7 +52,7 @@ Thumbs.db
 back/.env
 front/.env
 
-package-lock.json
+package-lock.json*
 *package-lock.json
 .package-lock.json
 **/package-lock.json

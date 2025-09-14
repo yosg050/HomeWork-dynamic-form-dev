@@ -34,7 +34,6 @@ export class AgeAnalyzerService {
 
     return {
       averageAgeYears: averageAge,
-      agesCounted: this.validAgeCount,
       ageBuckets: mapToObject(this.ageBuckets),
     };
   }

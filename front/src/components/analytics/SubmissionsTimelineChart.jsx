@@ -1,8 +1,9 @@
 import { Card, CardContent, Typography, Box, Chip } from "@mui/material";
 import BarChartIcon from "@mui/icons-material/BarChart";
 
-
 export function SubmissionsTimelineChart({ data }) {
+  console.log(data);
+
   if (
     !data ||
     !data.submissionsTimeline ||
@@ -23,21 +24,25 @@ export function SubmissionsTimelineChart({ data }) {
   const timeline = data.submissionsTimeline;
   const timelineStats = data.timelineStats || {};
 
+
   const timelineData = Object.entries(timeline)
-    .map(([date, count]) => ({
-      date,
-      count,
-      dayName: new Date(date).toLocaleDateString("en-US", { weekday: "short" }),
-      formattedDate: new Date(date).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      }),
-      fullDate: new Date(date).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      }),
-    }))
+    .map(([date, count]) => {
+      const localDate = new Date(`${date}T12:00:00`);
+      return {
+        date,
+        count,
+        dayName: localDate.toLocaleDateString("en-US", { weekday: "short" }),
+        formattedDate: localDate.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        }),
+        fullDate: localDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }),
+      };
+    })
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
   const totalSubmissions = timelineStats.totalDays
@@ -48,10 +53,10 @@ export function SubmissionsTimelineChart({ data }) {
 
   const getBarColor = (count, index) => {
     if (count === 0) return "#f5f5f5";
-    if (count === maxCount && count > 0) return "#f44336"; 
+    if (count === maxCount && count > 0) return "#f44336";
     if (count >= maxCount * 0.7) return "#ff9800";
-    if (count >= maxCount * 0.4) return "#2196f3"; 
-    return "#4caf50"; 
+    if (count >= maxCount * 0.4) return "#2196f3";
+    return "#4caf50";
   };
 
   const getBarHeight = (count) => {

@@ -36,7 +36,6 @@ export class AnalyticsService {
       ...genderResults,
       ...ageResults,
       derived: {
-        agesCounted: ageResults.agesCounted,
         ageBuckets: ageResults.ageBuckets,
         ...timeResults,
         // Timeline data for the new chart

@@ -8,7 +8,6 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 export function SummaryCards({ data }) {
   const total = data?.totalSubmissions ?? 0;
   const avgAge = data?.averageAgeYears;
-  const agesCounted = data?.derived?.agesCounted ?? 0;
   const lastSubmission = data?.derived?.lastSubmissionAt;
 
   const formatDate = (isoString) => {
@@ -28,11 +27,7 @@ export function SummaryCards({ data }) {
   };
 
   return (
-    <Grid 
-      container 
-      spacing={2}
-      justifyContent="center"
-    >
+    <Grid container spacing={2} justifyContent="center">
       <Grid size={{ xs: 6, sm: 3 }}>
         <StatsCard
           title="Total Submissions"
@@ -48,15 +43,6 @@ export function SummaryCards({ data }) {
           value={formatAge(avgAge)}
           icon={<CakeIcon />}
           color="secondary"
-        />
-      </Grid>
-
-      <Grid size={{ xs: 6, sm: 3 }}>
-        <StatsCard
-          title="Valid Ages"
-          value={agesCounted.toLocaleString()}
-          icon={<BarChartIcon />}
-          color="success"
         />
       </Grid>
 
