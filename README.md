@@ -53,6 +53,12 @@ Key Features:
 - **Frontend:** React, Material UI
 - **Backend:** Node.js (Express), AWS Lambda ready
 
+# AWS DynamoDB configuration
+DYNAMO_TABLE=Submissions
+AWS_REGION=eu-north-1
+AWS_ACCESS_KEY_ID=your-access-key-id
+AWS_SECRET_ACCESS_KEY=your-secret-access-key
+
 ## Running Locally
 
 ### Prerequisites
@@ -81,4 +87,3 @@ AWS_REGION=us-east-1
 
 - **Database:** AWS DynamoDB
 
-```
