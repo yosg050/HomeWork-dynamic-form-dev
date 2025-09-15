@@ -22,11 +22,22 @@ export class DuplicateSubmissionError extends AppError {
 }
 
 export class InternalError extends AppError {
-  constructor() {
+  constructor(message = "Unexpected server error", options = {}) {
     super({
       code: "INTERNAL_ERROR",
-      message: "Unexpected server error",
+      message,
       status: 500,
+      details: options.cause ? { cause: options.cause } : null,
+    });
+  }
+}
+
+export class NotFoundError extends AppError {
+  constructor(resource = "Resource") {
+    super({
+      code: "NOT_FOUND",
+      message: `${resource} not found`,
+      status: 404,
     });
   }
 }

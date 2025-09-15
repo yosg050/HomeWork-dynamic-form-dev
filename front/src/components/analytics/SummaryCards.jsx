@@ -8,7 +8,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 export function SummaryCards({ data }) {
   const total = data?.totalSubmissions ?? 0;
   const avgAge = data?.averageAgeYears;
-  const lastSubmission = data?.derived?.lastSubmissionAt;
+  const lastSubmission = data?.lastSubmissionAt;
 
   const formatDate = (isoString) => {
     if (!isoString) return "Never";
@@ -18,6 +18,7 @@ export function SummaryCards({ data }) {
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+      timeZone: "Asia/Jerusalem",
     });
   };
 

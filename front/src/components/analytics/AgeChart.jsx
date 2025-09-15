@@ -7,6 +7,8 @@ import {
 } from "@mui/material";
 
 export function AgeChart({ data }) {
+
+
   if (!data || Object.keys(data).length === 0) {
     return (
       <Card sx={{ textAlign: "center", py: 4 }}>
@@ -23,16 +25,7 @@ export function AgeChart({ data }) {
   const total = Object.values(data).reduce((sum, count) => sum + count, 0);
 
   const sortedEntries = Object.entries(data).sort((a, b) => {
-    const order = [
-      "0-17",
-      "18-24",
-      "25-34",
-      "35-44",
-      "45-54",
-      "55-64",
-      "65+",
-      "unknown",
-    ];
+    const order = ["0-17", "18-24", "25-34", "35-44", "45-54", "55-64", "65+"];
     return order.indexOf(a[0]) - order.indexOf(b[0]);
   });
 

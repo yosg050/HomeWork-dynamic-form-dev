@@ -1,5 +1,5 @@
 export function incrementMapCounter(map, key, increment = 1) {
-  const normalizedKey = (key ?? "Unknown").toString();
+  const normalizedKey = (key ?? "unknown").toString();
   map.set(normalizedKey, (map.get(normalizedKey) ?? 0) + increment);
 }
 
