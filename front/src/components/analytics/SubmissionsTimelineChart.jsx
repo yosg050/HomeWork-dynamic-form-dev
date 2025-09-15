@@ -2,7 +2,6 @@ import { Card, CardContent, Typography, Box, Chip } from "@mui/material";
 import BarChartIcon from "@mui/icons-material/BarChart";
 
 export function SubmissionsTimelineChart({ data }) {
-  console.log(data);
 
   if (
     !data ||
